@@ -2,7 +2,7 @@
 
 A modern web application for organizing and sharing educational video lessons. This platform allows teachers to showcase their video content organized by categories, making it easy for students to find and watch educational content.
 
-![LetPhil - Lessons Screenshot](public/app-screenshot.png)
+![LetPhil - Lessons Screenshot](public/app-home.jpg)
 
 ## Table of Contents
 
