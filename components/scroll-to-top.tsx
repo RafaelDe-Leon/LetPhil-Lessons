@@ -9,6 +9,9 @@ export function ScrollToTop() {
 
   // Show button when page is scrolled down
   const toggleVisibility = () => {
+    // Skip during SSR
+    if (typeof window === 'undefined') return
+
     if (window.scrollY > 300) {
       setIsVisible(true)
     } else {
@@ -18,6 +21,9 @@ export function ScrollToTop() {
 
   // Set up scroll event listener
   useEffect(() => {
+    // Skip during SSR
+    if (typeof window === 'undefined') return
+
     window.addEventListener('scroll', toggleVisibility)
     return () => window.removeEventListener('scroll', toggleVisibility)
   }, [])
@@ -29,6 +35,9 @@ export function ScrollToTop() {
       behavior: 'smooth',
     })
   }
+
+  // Don't render during SSR
+  if (typeof window === 'undefined') return null
 
   return (
     <>

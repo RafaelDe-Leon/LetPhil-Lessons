@@ -7,12 +7,31 @@ import Navigation from '@/components/navigation'
 import Link from 'next/link'
 import { LoadingIndicator } from '@/components/loading-indicator'
 import { ScrollToTop } from '@/components/scroll-to-top'
+import { Suspense } from 'react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'LetPhil - Lessons',
   description: 'A modern platform for educational video lessons',
+}
+
+// Create a client component wrapper for LoadingIndicator
+function ClientLoadingIndicator() {
+  return (
+    <Suspense fallback={null}>
+      <LoadingIndicator />
+    </Suspense>
+  )
+}
+
+// Create a client component wrapper for ScrollToTop
+function ClientScrollToTop() {
+  return (
+    <Suspense fallback={null}>
+      <ScrollToTop />
+    </Suspense>
+  )
 }
 
 export default function RootLayout({
@@ -24,7 +43,7 @@ export default function RootLayout({
     <html lang='en' suppressHydrationWarning>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider>
-          <LoadingIndicator />
+          <ClientLoadingIndicator />
           <div className='min-h-screen bg-gradient-to-b from-white to-slate-50 dark:from-slate-950 dark:to-slate-900'>
             <header className='sticky top-0 z-40 border-b bg-white/80 backdrop-blur-sm dark:bg-slate-950/80 dark:border-slate-800'>
               <div className='container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
@@ -65,7 +84,7 @@ export default function RootLayout({
                 </div>
               </div>
             </footer>
-            <ScrollToTop />
+            <ClientScrollToTop />
           </div>
         </ThemeProvider>
       </body>
