@@ -1,12 +1,13 @@
-"use client"
+'use client'
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Home, Users, BookOpen, Video } from "lucide-react"
-import { LoginButton } from "@/components/login-button"
-import { MobileNav } from "@/components/mobile-nav"
-import { useAuth } from "@/components/auth-provider"
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Button } from '@/components/ui/button'
+import { Home, Users, BookOpen, Video } from 'lucide-react'
+import { LoginButton } from '@/components/login-button'
+import { MobileNav } from '@/components/mobile-nav'
+import { useAuth } from '@/components/auth-provider'
+import { ThemeToggle } from '@/components/ui/theme-toggle'
 
 export default function Navigation() {
   const pathname = usePathname()
@@ -15,32 +16,32 @@ export default function Navigation() {
   // Routes that are always visible
   const publicRoutes = [
     {
-      href: "/",
-      label: "Home",
+      href: '/',
+      label: 'Home',
       icon: Home,
-      active: pathname === "/",
+      active: pathname === '/',
     },
   ]
 
   // Routes that are only visible when logged in
   const protectedRoutes = [
     {
-      href: "/videos",
-      label: "Sessions",
+      href: '/videos',
+      label: 'Sessions',
       icon: Video,
-      active: pathname === "/videos",
+      active: pathname === '/videos',
     },
     {
-      href: "/categories",
-      label: "Topics",
+      href: '/categories',
+      label: 'Topics',
       icon: BookOpen,
-      active: pathname === "/categories",
+      active: pathname === '/categories',
     },
     {
-      href: "/coaches",
-      label: "Coaches",
+      href: '/coaches',
+      label: 'Coaches',
       icon: Users,
-      active: pathname === "/coaches" || pathname.startsWith("/coaches/"),
+      active: pathname === '/coaches' || pathname.startsWith('/coaches/'),
     },
   ]
 
@@ -48,24 +49,29 @@ export default function Navigation() {
   const routes = user ? protectedRoutes : publicRoutes
 
   return (
-    <nav className="flex items-center gap-2">
+    <nav className='flex items-center gap-2'>
       {/* Mobile Navigation */}
       <MobileNav />
 
       {/* Desktop Navigation */}
-      <div className="hidden md:flex items-center gap-1">
-        {routes.map((route) => (
-          <Button key={route.href} variant={route.active ? "default" : "ghost"} size="sm" asChild>
-            <Link href={route.href} className="flex items-center gap-1">
-              <route.icon className="h-4 w-4" />
+      <div className='hidden md:flex items-center gap-1'>
+        {routes.map(route => (
+          <Button key={route.href} variant={route.active ? 'default' : 'ghost'} size='sm' asChild>
+            <Link href={route.href} className='flex items-center gap-1'>
+              <route.icon className='h-4 w-4' />
               {route.label}
             </Link>
           </Button>
         ))}
       </div>
 
+      {/* Theme Toggle Button - Always visible on desktop */}
+      <div className='hidden md:block ml-2'>
+        <ThemeToggle />
+      </div>
+
       {/* Login Button - Always visible on desktop */}
-      <div className="hidden md:block ml-2">
+      <div className='hidden md:block ml-2'>
         <LoginButton />
       </div>
     </nav>
