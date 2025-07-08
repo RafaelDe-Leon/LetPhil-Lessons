@@ -1,0 +1,43 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /* ---------- helper functions ---------- */
+    function isSignedIn()   { return request.auth != null; }
+    function isOwner(id)    { return isSignedIn() && request.auth.uid == id; }
+    function isAdmin()      {
+      return isSignedIn() &&
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true;
+    }
+
+    /* ---------- users collection ---------- */
+    match /users/{userId} {
+
+      // Anyone who is signed-in can read user docs
+      allow read: if isSignedIn();
+
+      // 1️⃣  NEW  – allow brand-new users to CREATE their own doc at signup
+      allow create: if isOwner(userId);
+
+      // 2️⃣  Owners can UPDATE (e.g. change photo, name) on their own doc
+      allow update: if isOwner(userId);
+
+      // 3️⃣  Admins can UPDATE / DELETE any user doc
+      allow update, delete: if isAdmin();
+    }
+
+    /* ---------- videos ---------- */
+    match /videos/{videoId} {
+      allow read:  if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    /* ---------- settings ---------- */
+    match /settings/{settingId} {
+      allow read:  if isSignedIn();
+      allow write: if isAdmin();
+    }
+  }
+}

@@ -1,36 +1,58 @@
 "use client"
+
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Menu, Home, Users, BookOpen } from "lucide-react"
+import { Home, Users, BookOpen, Video } from "lucide-react"
+import { LoginButton } from "@/components/login-button"
+import { MobileNav } from "@/components/mobile-nav"
+import { useAuth } from "@/components/auth-provider"
 
 export default function Navigation() {
   const pathname = usePathname()
+  const { user } = useAuth()
 
-  const routes = [
+  // Routes that are always visible
+  const publicRoutes = [
     {
       href: "/",
       label: "Home",
       icon: Home,
       active: pathname === "/",
     },
+  ]
+
+  // Routes that are only visible when logged in
+  const protectedRoutes = [
+    {
+      href: "/videos",
+      label: "Sessions",
+      icon: Video,
+      active: pathname === "/videos",
+    },
     {
       href: "/categories",
-      label: "Categories",
+      label: "Topics",
       icon: BookOpen,
       active: pathname === "/categories",
     },
     {
-      href: "/teachers",
-      label: "Teachers",
+      href: "/coaches",
+      label: "Coaches",
       icon: Users,
-      active: pathname === "/teachers" || pathname.startsWith("/teachers/"),
+      active: pathname === "/coaches" || pathname.startsWith("/coaches/"),
     },
   ]
 
+  // For logged-in users, replace Home with Sessions as the main route
+  const routes = user ? protectedRoutes : publicRoutes
+
   return (
     <nav className="flex items-center gap-2">
+      {/* Mobile Navigation */}
+      <MobileNav />
+
+      {/* Desktop Navigation */}
       <div className="hidden md:flex items-center gap-1">
         {routes.map((route) => (
           <Button key={route.href} variant={route.active ? "default" : "ghost"} size="sm" asChild>
@@ -42,25 +64,10 @@ export default function Navigation() {
         ))}
       </div>
 
-      {/* Mobile navigation */}
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild className="md:hidden">
-          <Button variant="ghost" size="icon">
-            <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle menu</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          {routes.map((route) => (
-            <DropdownMenuItem key={route.href} asChild>
-              <Link href={route.href} className="flex items-center gap-2">
-                <route.icon className="h-4 w-4" />
-                {route.label}
-              </Link>
-            </DropdownMenuItem>
-          ))}
-        </DropdownMenuContent>
-      </DropdownMenu>
+      {/* Login Button - Always visible on desktop */}
+      <div className="hidden md:block ml-2">
+        <LoginButton />
+      </div>
     </nav>
   )
 }
