@@ -14,6 +14,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'LetPhil - Lessons',
   description: 'A modern platform for educational video lessons',
+    generator: 'v0.dev'
 }
 
 // Create a client component wrapper for LoadingIndicator
